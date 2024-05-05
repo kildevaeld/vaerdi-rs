@@ -73,7 +73,7 @@ into_value!(
     NaiveTime => Time
 );
 
-into_value!(@number i8, u8, i16, u16, i32, u32, i64, u64, f32, f64);
+into_value!(@number i8, u8, i16, u16, i32, u32, i64, u64, usize, f32, f64);
 
 impl<'a> From<&'a str> for Value {
     fn from(from: &'a str) -> Value {

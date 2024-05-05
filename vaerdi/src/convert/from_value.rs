@@ -103,39 +103,19 @@ from_impl!(
     f64 => F64
 );
 
-// from_impl!(
-//     @time
-//     NaiveDate => as_date,
-//     NaiveDateTime => as_datetime,
-//     NaiveTime => as_time
-// );
+impl FromValue for usize {
+    type Error = ConvertError;
 
-// impl<'a> TryFrom<&'a Value> for &'a str {
-//     type Error = ConvertError;
-//     fn try_from(from: &'a Value) -> Result<Self, Self::Error> {
-//         match from.as_string() {
-//             Some(s) => Ok(s),
-//             None => Err(ConvertError::invalid_type(Type::String, from.get_type())),
-//         }
-//     }
-// }
-
-// impl<'a> TryFrom<&'a Value> for &'a [u8] {
-//     type Error = ConvertError;
-//     fn try_from(from: &'a Value) -> Result<Self, Self::Error> {
-//         match from.as_bytes() {
-//             Some(s) => Ok(s.as_ref()),
-//             None => Err(ConvertError::invalid_type(Type::Bytes, from.get_type())),
-//         }
-//     }
-// }
-
-// impl<'a> TryFrom<&'a Value> for Value {
-//     type Error = ConvertError;
-//     fn try_from(value: &'a Value) -> Result<Self, Self::Error> {
-//         Ok(value.clone())
-//     }
-// }
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        match value.into_number() {
+            Ok(n) => match n {
+                Number::U64(n) => Ok(n as usize),
+                n => Err(ConvertError::invalid_type(Type::U64, n.get_type())),
+            },
+            Err(err) => Err(ConvertError::invalid_type(Type::U64, err.get_type())),
+        }
+    }
+}
 
 impl<T> FromValue for Vec<T>
 where
@@ -165,26 +145,6 @@ impl FromValue for alloc::string::String {
         }
     }
 }
-
-// impl<K, T, H> TryFrom<Value> for HashMap<K, T, H>
-// where
-//     K: From<String> + Eq + core::hash::Hash,
-//     T: TryFrom<Value, Error = ConvertError>,
-//     H: BuildHasher + Default,
-// {
-//     type Error = ConvertError;
-//     fn try_from(value: Value) -> Result<Self, Self::Error> {
-//         let Value::Map(map) = value else {
-//             return Err(ConvertError::invalid_type(Type::Map, value.get_type()));
-//         };
-
-//         let ret = map
-//             .into_iter()
-//             .map(|(k, v)| Ok((k.into(), v.try_into()?)))
-//             .collect::<Result<HashMap<_, _, H>, _>>()?;
-//         Ok(ret)
-//     }
-// }
 
 impl FromValue for Type {
     type Error = ConvertError;

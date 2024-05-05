@@ -455,6 +455,12 @@ impl From<f64> for Number {
     }
 }
 
+impl From<usize> for Number {
+    fn from(value: usize) -> Self {
+        Number::U64(value as _)
+    }
+}
+
 impl TryFrom<Number> for f64 {
     type Error = TryFromNumberError;
     fn try_from(number: Number) -> Result<f64, Self::Error> {
