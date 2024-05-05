@@ -4,6 +4,7 @@ use bitflags::bitflags;
 use crate::Value;
 
 bitflags! {
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Type: u32 {
     const String = 1 << 0;
