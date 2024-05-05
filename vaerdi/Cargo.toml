@@ -39,7 +39,6 @@ serde = { version = "1", default-features = false, features = [
 
 vaerdi-macros = { path = "../vaerdi-macros", optional = true }
 
-geo-types = { version = "*", default-features = false }
 
 [[example]]
 name = "value"
