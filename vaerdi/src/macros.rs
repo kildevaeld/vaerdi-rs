@@ -225,7 +225,6 @@ macro_rules! value_internal {
     // Must be below every other rule.
     ($other:expr) => {
         {
-            // $crate::to_value(&$other).unwrap()
             let value: $crate::Value = $other.into();
             value
         }
