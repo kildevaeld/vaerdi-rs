@@ -1,0 +1,47 @@
+[package]
+name = "vaerdi"
+version = "0.1.0"
+authors = ["Rasmus Kildevæld"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = []
+serde = ["dep:serde", "chrono/serde", "uuid/serde", "bitflags/serde"]
+macros = ["vaerdi-macros"]
+std = ["chrono/clock", "uuid/std", "avagarden/std"]
+gerning = ["dep:gerning"]
+json = ["udled", "base64"]
+
+
+[dependencies]
+hashbrown = { version = "0.14", features = ["ahash"], default-features = false }
+chrono = { version = "0.4", default-features = false, features = ["alloc"] }
+uuid = { version = "1", default-features = false, features = ["v4"] }
+bitflags = { version = "2" }
+avagarden = { git = "https://github.com/kildevaeld/avagarden" }
+
+
+base64 = { version = "0.22", default-features = false, features = [
+    "alloc",
+], optional = true }
+udled = { git = "https://github.com/kildevaeld/udled-rs", default-features = false, optional = true }
+
+gerning = { git = "https://github.com/kildevaeld/gerning-rs", features = [
+    "async",
+], optional = true }
+serde = { version = "1", default-features = false, features = [
+    "alloc",
+    "derive",
+    "rc",
+], optional = true }
+
+vaerdi-macros = { path = "../vaerdi-macros", optional = true }
+
+geo-types = { version = "*", default-features = false }
+
+[[example]]
+name = "value"
+path = "examples/value.rs"
+required-features = ["macros", "std", "json"]
