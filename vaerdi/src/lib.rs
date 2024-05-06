@@ -31,6 +31,7 @@ pub use self::{
 
 pub use ::{
     chrono::{self, NaiveDate, NaiveDateTime, NaiveTime},
+    hashbrown,
     uuid::{self, Uuid},
 };
 

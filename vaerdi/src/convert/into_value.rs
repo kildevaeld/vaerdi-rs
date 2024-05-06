@@ -2,7 +2,9 @@
 use crate::Type;
 use crate::{number::Number, string::String, value_ref::ValueRef, List, Map, Value};
 use alloc::{
+    boxed::Box,
     string::{String as StdString, ToString},
+    sync::Arc,
     vec::Vec,
 };
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
@@ -153,5 +155,45 @@ impl gerning::Typed<Value> for Number {
 impl From<Number> for String {
     fn from(value: Number) -> Self {
         value.to_string().into()
+    }
+}
+
+impl<T> From<Box<T>> for Value
+where
+    T: Into<Value>,
+{
+    fn from(value: Box<T>) -> Self {
+        let v = *value;
+        v.into()
+    }
+}
+
+impl<T> From<Box<[T]>> for Value
+where
+    T: Into<Value>,
+{
+    fn from(value: Box<[T]>) -> Self {
+        let v: Vec<_> = value.into();
+        v.into()
+    }
+}
+
+impl<T> From<Arc<T>> for Value
+where
+    T: Into<Value> + Clone,
+{
+    fn from(value: Arc<T>) -> Self {
+        let v = value.as_ref().clone();
+        v.into()
+    }
+}
+
+impl<T> From<Arc<[T]>> for Value
+where
+    T: Into<Value> + Clone,
+{
+    fn from(value: Arc<[T]>) -> Self {
+        let v: Vec<_> = value.as_ref().into();
+        v.into()
     }
 }

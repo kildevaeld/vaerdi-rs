@@ -1,6 +1,7 @@
 use crate::{bytes::Bytes, String};
 use core::{borrow::Borrow, hash::Hash};
 
+/// Like ToOwned
 pub trait ToKowned {
     type Owned;
     fn to_owned(&self) -> Self::Owned;
@@ -30,6 +31,7 @@ impl ToKowned for String {
     }
 }
 
+/// Like Cow in std
 #[derive(Debug)]
 pub enum Kow<'a, S: ToKowned + ?Sized + 'a> {
     Owned(S::Owned),

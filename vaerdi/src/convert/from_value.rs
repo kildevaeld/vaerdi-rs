@@ -1,6 +1,6 @@
 use super::error::ConvertError;
 use crate::{bytes::Bytes, string::String, List, Map, Number, Type, Value};
-use alloc::{string::ToString, vec::Vec};
+use alloc::{boxed::Box, rc::Rc, string::ToString, sync::Arc, vec::Vec};
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use core::convert::{Infallible, TryInto};
 use uuid::Uuid;
@@ -192,5 +192,65 @@ where
         } else {
             T::from_value(value).map(Option::Some)
         }
+    }
+}
+
+impl<T> FromValue for Box<T>
+where
+    T: FromValue,
+{
+    type Error = T::Error;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        Ok(Box::new(T::from_value(value)?))
+    }
+}
+
+impl<T> FromValue for Box<[T]>
+where
+    T: FromValue,
+{
+    type Error = <Vec<T> as FromValue>::Error;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        Ok(Box::from(Vec::<T>::from_value(value)?))
+    }
+}
+
+impl<T> FromValue for Arc<T>
+where
+    T: FromValue,
+{
+    type Error = T::Error;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        Ok(Arc::new(T::from_value(value)?))
+    }
+}
+
+impl<T> FromValue for Arc<[T]>
+where
+    T: FromValue,
+{
+    type Error = <Vec<T> as FromValue>::Error;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        Ok(Arc::from(Vec::<T>::from_value(value)?))
+    }
+}
+
+impl<T> FromValue for Rc<T>
+where
+    T: FromValue,
+{
+    type Error = T::Error;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        Ok(Rc::new(T::from_value(value)?))
+    }
+}
+
+impl<T> FromValue for Rc<[T]>
+where
+    T: FromValue,
+{
+    type Error = <Vec<T> as FromValue>::Error;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        Ok(Rc::from(Vec::<T>::from_value(value)?))
     }
 }
