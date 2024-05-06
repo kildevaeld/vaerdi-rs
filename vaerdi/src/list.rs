@@ -26,6 +26,12 @@ impl<V> List<V> {
         List { v: Vec::new() }
     }
 
+    pub fn with_capacity(capacity: usize) -> List<V> {
+        List {
+            v: Vec::with_capacity(capacity),
+        }
+    }
+
     pub fn get(&self, idx: usize) -> Option<&V> {
         self.v.get(idx)
     }
@@ -89,6 +95,16 @@ impl<V> IntoIterator for List<V> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.v.into_iter()
+    }
+}
+
+impl<'a, V> IntoIterator for &'a List<V> {
+    type Item = &'a V;
+
+    type IntoIter = core::slice::Iter<'a, V>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.v.iter()
     }
 }
 
