@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [features]
-# default = ["gerning"]
-gerning = ["dep:gerning", "blua-worker"]
+default = ["gerning"]
+gerning = ["dep:gerning", "blua-worker", "vaerdi/gerning"]
 
 [dependencies]
 mlua = { version = "0.9" }
@@ -13,4 +13,8 @@ vaerdi = { path = "../vaerdi" }
 blua-worker = { git = "https://github.com/kildevaeld/lua-modules-rs", optional = true }
 gerning = { git = "https://github.com/kildevaeld/gerning-rs", features = [
   "std",
+  "async",
 ], optional = true }
+
+[dev-dependencies]
+mlua = { version = "0.9", features = ["macros"] }

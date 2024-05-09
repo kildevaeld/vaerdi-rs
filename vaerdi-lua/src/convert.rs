@@ -36,7 +36,7 @@ pub fn into_lua<'lua>(
     value: &Value,
     raw: bool,
 ) -> mlua::Result<mlua::Value<'lua>> {
-    match value {
+    let value = match value {
         Value::Bool(b) => mlua::Value::Boolean(*b),
         Value::String(s) => mlua::Value::String(vm.create_string(&**s)?),
         Value::Map(m) => {
@@ -73,5 +73,5 @@ pub fn into_lua<'lua>(
         Value::Null => mlua::Value::Nil,
     };
 
-    todo!()
+    Ok(value)
 }
