@@ -50,6 +50,34 @@ where
     }
 }
 
+#[cfg(feature = "serde")]
+impl<'de, 'a, T> serde::de::Deserialize<'de> for Kow<'a, T>
+where
+    T: ?Sized + ToKowned,
+    T::Owned: serde::de::Deserialize<'de>,
+{
+    #[inline]
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::de::Deserializer<'de>,
+    {
+        T::Owned::deserialize(deserializer).map(Kow::Owned)
+    }
+}
+
+impl<'a, T> serde::ser::Serialize for Kow<'a, T>
+where
+    T: ?Sized + ToKowned + serde::ser::Serialize,
+    T::Owned: Borrow<T>,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        (**self).serialize(serializer)
+    }
+}
+
 impl<'a, S> AsRef<S> for Kow<'a, S>
 where
     S: ToKowned + ?Sized,
