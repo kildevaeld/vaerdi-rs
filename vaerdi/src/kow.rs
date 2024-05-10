@@ -176,7 +176,7 @@ where
 
 impl<'a, S> fmt::Display for Kow<'a, S>
 where
-    S: Display + ToKowned,
+    S: ?Sized + Display + ToKowned,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", &*self)
