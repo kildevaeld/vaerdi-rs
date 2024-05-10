@@ -1,5 +1,9 @@
 use crate::{bytes::Bytes, String};
-use core::{borrow::Borrow, hash::Hash};
+use core::{
+    borrow::Borrow,
+    fmt::{self, Display},
+    hash::Hash,
+};
 
 /// Like ToOwned
 pub trait ToKowned {
@@ -65,6 +69,7 @@ where
     }
 }
 
+#[cfg(feature = "serde")]
 impl<'a, T> serde::ser::Serialize for Kow<'a, T>
 where
     T: ?Sized + ToKowned + serde::ser::Serialize,
@@ -166,6 +171,15 @@ where
 {
     fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
         self.as_ref().hash(state)
+    }
+}
+
+impl<'a, S> fmt::Display for Kow<'a, S>
+where
+    S: Display + ToKowned,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", &*self)
     }
 }
 
