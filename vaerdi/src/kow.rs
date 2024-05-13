@@ -180,9 +180,10 @@ where
 impl<'a, S> fmt::Display for Kow<'a, S>
 where
     S: ?Sized + Display + ToKowned,
+    S::Owned: Borrow<S>,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", &*self)
+        write!(f, "{}", self.as_ref())
     }
 }
 
