@@ -22,19 +22,6 @@ pub enum ValueRef<'a> {
     Null,
 }
 
-impl<'a> ValueRef<'a> {
-    // pub fn to_string(&self) -> Option<String> {
-    //     match self {
-    //         ValueRef::Bool(b) => Some(b.to_string()),
-    //         ValueRef::String(s) => Some(s.to_string()),
-    //         ValueRef::Char(c) => Some(c.to_string()),
-    //         ValueRef::Number(n) => Some(n.to_string()),
-    //         ValueRef::Time(t) => Some(t.to_string()),
-    //         _ => None,
-    //     }
-    // }
-}
-
 impl<'a> From<&'a Value> for ValueRef<'a> {
     fn from(value: &'a Value) -> Self {
         match value {

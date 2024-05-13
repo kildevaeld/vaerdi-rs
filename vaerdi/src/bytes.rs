@@ -33,15 +33,3 @@ impl From<Bytes> for Vec<u8> {
         value.0.to_vec()
     }
 }
-
-// impl From<Bytes> for bytes::Bytes {
-//     fn from(value: Bytes) -> Self {
-//         value.0
-//     }
-// }
-
-// impl From<bytes::Bytes> for Bytes {
-//     fn from(value: bytes::Bytes) -> Self {
-//         Bytes(value)
-//     }
-// }

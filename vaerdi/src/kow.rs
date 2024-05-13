@@ -89,7 +89,10 @@ where
     S::Owned: Borrow<S>,
 {
     fn as_ref(&self) -> &S {
-        self
+        match self {
+            Kow::Owned(o) => o.borrow(),
+            Kow::Ref(s) => s,
+        }
     }
 }
 
@@ -100,10 +103,7 @@ where
 {
     type Target = S;
     fn deref(&self) -> &Self::Target {
-        match self {
-            Kow::Owned(o) => o.borrow(),
-            Kow::Ref(s) => s,
-        }
+        self.as_ref()
     }
 }
 
