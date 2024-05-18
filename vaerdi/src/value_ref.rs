@@ -104,3 +104,28 @@ impl<'a> fmt::Display for ValueRef<'a> {
         }
     }
 }
+
+pub trait AsValueRef {
+    fn as_value_ref<'a>(&'a self) -> ValueRef<'a>;
+}
+
+impl<'c, T> AsValueRef for &'c T
+where
+    T: AsValueRef,
+{
+    fn as_value_ref<'a>(&'a self) -> ValueRef<'a> {
+        (&**self).as_value_ref()
+    }
+}
+
+impl<'c> AsValueRef for ValueRef<'c> {
+    fn as_value_ref<'a>(&'a self) -> ValueRef<'a> {
+        *self
+    }
+}
+
+impl AsValueRef for Value {
+    fn as_value_ref<'a>(&'a self) -> ValueRef<'a> {
+        self.into()
+    }
+}
