@@ -8,6 +8,7 @@ use alloc::{
     vec::Vec,
 };
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use uuid::Uuid;
 
 macro_rules! into_value {
     ($($ty: ty => $val: ident),*) => {
@@ -74,7 +75,8 @@ into_value!(
     // HashMap<String, Value> => Map,
     NaiveDate => Date,
     NaiveDateTime => DateTime,
-    NaiveTime => Time
+    NaiveTime => Time,
+    Uuid => Uuid
 );
 
 into_value!(@number i8, u8, i16, u16, i32, u32, i64, u64, usize, f32, f64);
