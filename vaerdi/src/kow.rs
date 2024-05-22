@@ -205,6 +205,15 @@ impl<'a> From<&'a str> for Kow<'a, str> {
     }
 }
 
+impl<'a> From<Kow<'a, str>> for String {
+    fn from(value: Kow<'a, str>) -> Self {
+        match value {
+            Kow::Owned(o) => o,
+            Kow::Ref(o) => o.into(),
+        }
+    }
+}
+
 impl ToKowned for [u8] {
     type Owned = Bytes;
 
