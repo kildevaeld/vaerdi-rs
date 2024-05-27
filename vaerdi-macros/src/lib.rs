@@ -4,8 +4,6 @@ use proc_macro2::Ident;
 use quote::{format_ident, quote};
 use syn::{parse_macro_input, Data, DataEnum, DataStruct, DeriveInput, Field, Generics};
 
-
-
 #[proc_macro_derive(IntoValue)]
 pub fn derive_into_value(input: TokenStream) -> TokenStream {
     let DeriveInput {
@@ -38,7 +36,7 @@ pub fn derive_from_value(input: TokenStream) -> TokenStream {
     }
 }
 
-fn derive_enum_into_value(enum_name: Ident, _generics: Generics, item: DataEnum) -> TokenStream {
+fn derive_enum_into_value(enum_name: Ident, generics: Generics, item: DataEnum) -> TokenStream {
     let is_numbers = item.variants.iter().all(|m| m.discriminant.is_some());
     let is_labels = item
         .variants
@@ -118,8 +116,10 @@ fn derive_enum_into_value(enum_name: Ident, _generics: Generics, item: DataEnum)
             .collect::<Vec<_>>()
     };
 
+    let (ty, imp, wh) = generics.split_for_impl();
+
     quote!(
-        impl From<#enum_name> for #vaerdi_name::Value {
+        impl #imp From<#enum_name #ty> for #vaerdi_name::Value #wh {
             fn from(from: #enum_name) -> #vaerdi_name::Value {
                 match from {
                     #(#variants),*
@@ -130,10 +130,12 @@ fn derive_enum_into_value(enum_name: Ident, _generics: Generics, item: DataEnum)
     .into()
 }
 
-fn derive_struct_into_value(name: Ident, _generics: Generics, item: DataStruct) -> TokenStream {
+fn derive_struct_into_value(name: Ident, generics: Generics, item: DataStruct) -> TokenStream {
     let vaerdi_name = format_ident!("vaerdi");
 
     let len = item.fields.len();
+
+    let (ty, imp, wh) = generics.split_for_impl();
 
     if len == 1 {
         let field = item.fields.iter().next().unwrap();
@@ -141,7 +143,7 @@ fn derive_struct_into_value(name: Ident, _generics: Generics, item: DataStruct) 
         if field.ident.is_none() {
             return quote!(
 
-                impl From<#name> for #vaerdi_name::Value {
+                impl #imp From<#name #ty> for #vaerdi_name::Value #wh {
                     fn from(from: #name) ->  #vaerdi_name::Value {
                         from.0.into()
                     }
@@ -151,6 +153,8 @@ fn derive_struct_into_value(name: Ident, _generics: Generics, item: DataStruct) 
             .into();
         }
     }
+
+    let (ty, imp, wh) = generics.split_for_impl();
 
     let fields = item.fields.iter().map(|m| {
         let name = m.ident.as_ref().expect("expected name");
@@ -162,7 +166,7 @@ fn derive_struct_into_value(name: Ident, _generics: Generics, item: DataStruct) 
 
     quote!(
 
-        impl From<#name> for #vaerdi_name::Value {
+        impl #imp From<#name #ty> for #vaerdi_name::Value #wh {
             fn from(from: #name) ->  #vaerdi_name::Value {
                 let mut map = #vaerdi_name::Map::with_capacity(#len);
                 #(
@@ -189,6 +193,8 @@ fn derive_struct_from_value(name: Ident, generics: Generics, item: DataStruct) -
         }
     }
 
+    let (ty, imp, wh) = generics.split_for_impl();
+
     let fields = item
         .fields
         .iter()
@@ -208,9 +214,9 @@ fn derive_struct_from_value(name: Ident, generics: Generics, item: DataStruct) -
 
     quote!(
 
-        impl #vaerdi_name::convert::FromValue for #name {
+        impl #imp #vaerdi_name::convert::FromValue for #name #ty #wh {
             type Error = #vaerdi_name::ConvertError;
-            fn from_value(mut from: #vaerdi_name::Value) -> Result<#name, Self::Error> {
+            fn from_value(mut from: #vaerdi_name::Value) -> Result<#name #ty, Self::Error> {
                 let map = match from.as_map_mut() {
                     Some(map) => map,
                     None => return Err(#vaerdi_name::ConvertError::invalid_type(#vaerdi_name::Type::Map, from.get_type()))
@@ -229,28 +235,30 @@ fn derive_struct_from_value(name: Ident, generics: Generics, item: DataStruct) -
 
 fn derive_new_type_struct_from_value(
     name: Ident,
-    _generics: Generics,
+    generics: Generics,
     _item: &DataStruct,
     field: &Field,
 ) -> TokenStream {
     let vaerdi_name = format_ident!("vaerdi");
     let ty = &field.ty;
+    let (gty, imp, wh) = generics.split_for_impl();
+
     quote!(
 
-        impl #vaerdi_name::convert::FromValue for #name {
+        impl #imp #vaerdi_name::convert::FromValue for #name #gty #wh {
             type Error = #vaerdi_name::ConvertError;
             fn from_value(from: #vaerdi_name::Value) -> Result<#name, Self::Error> {
                 Ok(#name(<#ty as #vaerdi_name::convert::FromValue>::from_value(from)?))
             }
         }
 
-        
+
 
     )
     .into()
 }
 
-fn derive_enum_from_value(enum_name: Ident, _generics: Generics, item: DataEnum) -> TokenStream {
+fn derive_enum_from_value(enum_name: Ident, generics: Generics, item: DataEnum) -> TokenStream {
     let is_numbers = item.variants.iter().all(|m| m.discriminant.is_some());
     let is_labels = item
         .variants
@@ -368,12 +376,14 @@ fn derive_enum_from_value(enum_name: Ident, _generics: Generics, item: DataEnum)
             }
         });
 
+        let (ty, imp, wh) = generics.split_for_impl();
+
         quote!(
 
 
-            impl #vaerdi_name::convert::FromValue for #enum_name {
+            impl #imp #vaerdi_name::convert::FromValue for #enum_name #ty #wh {
                 type Error = #vaerdi_name::ConvertError;
-                fn from_value(mut from: #vaerdi_name::Value) -> Result<#enum_name, Self::Error> {
+                fn from_value(mut from: #vaerdi_name::Value) -> Result<#enum_name #ty, Self::Error> {
                     let Some(mut map) = from.as_map_mut() else {
                         return Err(#vaerdi_name::ConvertError::invalid_type(#vaerdi_name::Type::Map, from.get_type()))
                     };

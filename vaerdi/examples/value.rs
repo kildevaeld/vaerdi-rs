@@ -1,4 +1,4 @@
-use vaerdi::{convert::FromValue, FromValue, IntoValue, Value};
+use vaerdi::{convert::FromValue, kow::Kow, FromValue, IntoValue, Value};
 // use worm_macros::{FromValue, IntoValue};
 
 #[derive(Debug, IntoValue, FromValue)]
@@ -15,21 +15,21 @@ enum IntFlag {
 }
 
 #[derive(Debug, IntoValue, FromValue)]
-enum Kind {
+enum Kind<'a> {
     Flag(Flag),
     Int(IntFlag),
-    Struct(Struct),
+    Struct(Struct<'a>),
 }
 
 #[derive(Debug, IntoValue, FromValue)]
-pub struct Struct {
-    name: String,
+pub struct Struct<'a> {
+    name: Kow<'a, str>,
     age: u8,
 }
 
 #[derive(Debug, IntoValue, FromValue)]
-pub struct Payload {
-    kind: Kind,
+pub struct Payload<'a> {
+    kind: Kind<'a>,
     other: String,
 }
 
