@@ -1,6 +1,6 @@
 use super::error::ConvertError;
-use crate::{bytes::Bytes, string::String, List, Map, Number, Type, Value};
-use alloc::{boxed::Box, rc::Rc, string::ToString, sync::Arc, vec::Vec};
+use crate::{bytes::Bytes, kow::Kow, string::String, List, Map, Number, Type, Value};
+use alloc::{borrow::Cow, boxed::Box, rc::Rc, string::ToString, sync::Arc, vec::Vec};
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use core::convert::{Infallible, TryInto};
 use uuid::Uuid;
@@ -141,6 +141,26 @@ impl FromValue for alloc::string::String {
     fn from_value(value: Value) -> Result<Self, Self::Error> {
         match value {
             Value::String(v) => Ok(v.to_string()),
+            _ => Err(ConvertError::invalid_type(Type::String, value.get_type())),
+        }
+    }
+}
+
+impl<'a> FromValue for Cow<'a, str> {
+    type Error = ConvertError;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::String(v) => Ok(Cow::Owned(v.into())),
+            _ => Err(ConvertError::invalid_type(Type::String, value.get_type())),
+        }
+    }
+}
+
+impl<'a> FromValue for Kow<'a, str> {
+    type Error = ConvertError;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::String(v) => Ok(Kow::Owned(v)),
             _ => Err(ConvertError::invalid_type(Type::String, value.get_type())),
         }
     }

@@ -1,7 +1,8 @@
 #[cfg(feature = "gerning")]
 use crate::Type;
-use crate::{number::Number, string::String, value_ref::ValueRef, List, Map, Value};
+use crate::{kow::Kow, number::Number, string::String, value_ref::ValueRef, List, Map, Value};
 use alloc::{
+    borrow::Cow,
     boxed::Box,
     string::{String as StdString, ToString},
     sync::Arc,
@@ -90,6 +91,18 @@ impl<'a> From<&'a str> for Value {
 impl<'a> From<&'a str> for ValueRef<'a> {
     fn from(from: &'a str) -> Self {
         ValueRef::String(from)
+    }
+}
+
+impl<'a> From<Cow<'a, str>> for Value {
+    fn from(value: Cow<'a, str>) -> Self {
+        Value::String(value.into())
+    }
+}
+
+impl<'a> From<Kow<'a, str>> for Value {
+    fn from(value: Kow<'a, str>) -> Self {
+        Value::String(value.into())
     }
 }
 
