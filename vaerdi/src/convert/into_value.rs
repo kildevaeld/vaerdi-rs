@@ -8,7 +8,7 @@ use alloc::{
     sync::Arc,
     vec::Vec,
 };
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone};
 use uuid::Uuid;
 
 macro_rules! into_value {
@@ -212,5 +212,14 @@ where
     fn from(value: Arc<[T]>) -> Self {
         let v: Vec<_> = value.as_ref().into();
         v.into()
+    }
+}
+
+impl<T> From<DateTime<T>> for Value
+where
+    T: TimeZone,
+{
+    fn from(value: DateTime<T>) -> Self {
+        value.to_utc().into()
     }
 }

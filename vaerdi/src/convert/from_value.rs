@@ -1,7 +1,7 @@
 use super::error::ConvertError;
-use crate::{bytes::Bytes, kow::Kow, string::String, List, Map, Number, Type, Value};
+use crate::{bytes::Bytes, kow::Kow, r#type, string::String, List, Map, Number, Type, Value};
 use alloc::{borrow::Cow, boxed::Box, rc::Rc, string::ToString, sync::Arc, vec::Vec};
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime, TimeZone};
 use core::convert::{Infallible, TryInto};
 use uuid::Uuid;
 
@@ -272,5 +272,15 @@ where
     type Error = <Vec<T> as FromValue>::Error;
     fn from_value(value: Value) -> Result<Self, Self::Error> {
         Ok(Rc::from(Vec::<T>::from_value(value)?))
+    }
+}
+
+impl FromValue for DateTime<FixedOffset> {
+    type Error = ConvertError;
+    fn from_value(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::DateTime(date) => Ok(date.and_utc().fixed_offset()),
+            _ => return Err(ConvertError::invalid_type(Type::DateTime, value.get_type())),
+        }
     }
 }
