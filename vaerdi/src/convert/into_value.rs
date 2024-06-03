@@ -181,7 +181,7 @@ where
 {
     fn from(value: Box<T>) -> Self {
         let v = *value;
-        v.into()
+        <T as Into<Self>>::into(v)
     }
 }
 
@@ -210,7 +210,7 @@ where
     T: Into<Value> + Clone,
 {
     fn from(value: Arc<[T]>) -> Self {
-        let v: Vec<_> = value.as_ref().into();
+        let v: Vec<_> = value.as_ref().to_vec();
         v.into()
     }
 }
