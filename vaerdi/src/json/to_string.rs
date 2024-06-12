@@ -18,7 +18,7 @@ pub fn display<W: Write>(value: &Value, output: &mut W) -> Result {
         Value::Bytes(_) => todo!(),
         Value::Date(_) => todo!(),
         Value::DateTime(time) => {
-            write!(output, "{}", time.and_utc().to_rfc2822())
+            write!(output, "\"{}\"", time.and_utc().to_rfc2822())
         }
         Value::Time(_) => todo!(),
         Value::Uuid(id) => {
