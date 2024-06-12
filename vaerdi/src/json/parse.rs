@@ -1,4 +1,5 @@
 use alloc::string::String;
+use chrono::DateTime;
 use udled::{
     token::{Bool, Int, Opt, Str, Ws},
     Input, Tokenizer,
@@ -158,6 +159,9 @@ impl Tokenizer for JsonStringValue {
             if let Ok(uuid) = uuid::Uuid::parse_str(output.value) {
                 return Ok(Value::Uuid(uuid));
             }
+        }
+        if let Ok(date) = DateTime::parse_from_rfc3339(&output.value) {
+            return Ok(Value::DateTime(date.naive_utc()));
         }
 
         Ok(output.as_str().into())

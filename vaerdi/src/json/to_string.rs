@@ -18,7 +18,7 @@ pub fn display<W: Write>(value: &Value, output: &mut W) -> Result {
         Value::Bytes(_) => todo!(),
         Value::Date(_) => todo!(),
         Value::DateTime(time) => {
-            write!(output, "\"{}\"", time.and_utc().to_rfc2822())
+            write!(output, "\"{}\"", time.and_utc().to_rfc3339())
         }
         Value::Time(_) => todo!(),
         Value::Uuid(id) => {
@@ -65,3 +65,5 @@ pub fn display_object<W: Write>(value: &Map, output: &mut W) -> Result {
 
     Ok(())
 }
+
+pub struct DisplayOptions {}
