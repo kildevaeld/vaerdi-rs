@@ -1,0 +1,8 @@
+[package]
+name = "rquickjs-vaerdi"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+vaerdi = { path = "../vaerdi" }
+rquickjs = { version = "0.6", features = ["array-buffer", "macro"] }
