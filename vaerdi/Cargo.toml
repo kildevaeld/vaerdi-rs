@@ -30,6 +30,7 @@ udled = { git = "https://github.com/kildevaeld/udled-rs", default-features = fal
 
 gerning = { git = "https://github.com/kildevaeld/gerning-rs", features = [
     "async",
+    "service",
 ], optional = true }
 serde = { version = "1", default-features = false, features = [
     "alloc",

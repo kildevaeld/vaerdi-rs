@@ -151,3 +151,15 @@ impl<V> From<HashMap<String, V>> for Map<V> {
         Map { inner: map }
     }
 }
+
+#[cfg(feature = "gerning")]
+impl gerning::service::State<Value> for Map {
+    fn set(&mut self, name: &str, value: Value) -> Result<(), gerning::Error<Value>> {
+        self.insert(name, value);
+        Ok(())
+    }
+
+    fn get(&self, name: &str) -> Result<Option<Value>, gerning::Error<Value>> {
+        Ok(self.get(name).cloned())
+    }
+}
