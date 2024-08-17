@@ -88,17 +88,22 @@ impl Ord for Number {
 
 impl Hash for Number {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        match self {
-            Number::I8(i) => i.hash(state),
-            Number::U8(i) => i.hash(state),
-            Number::I16(i) => i.hash(state),
-            Number::U16(i) => i.hash(state),
-            Number::I32(i) => i.hash(state),
-            Number::U32(i) => i.hash(state),
-            Number::I64(i) => i.hash(state),
-            Number::U64(i) => i.hash(state),
-            Number::F32(f) => floating::hash(f, state),
-            Number::F64(f) => floating::hash(f, state),
+        // match self {
+        //     Number::I8(i) => i.hash(state),
+        //     Number::U8(i) => i.hash(state),
+        //     Number::I16(i) => i.hash(state),
+        //     Number::U16(i) => i.hash(state),
+        //     Number::I32(i) => i.hash(state),
+        //     Number::U32(i) => i.hash(state),
+        //     Number::I64(i) => i.hash(state),
+        //     Number::U64(i) => i.hash(state),
+        //     Number::F32(f) => floating::hash(f, state),
+        //     Number::F64(f) => floating::hash(f, state),
+        // }
+        if self.is_float() {
+            floating::hash(&self.as_f64(), state)
+        } else {
+            self.as_u64().hash(state)
         }
     }
 }
