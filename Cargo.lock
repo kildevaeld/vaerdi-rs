@@ -789,9 +789,17 @@ dependencies = [
 [[package]]
 name = "udled"
 version = "0.1.0"
-source = "git+https://github.com/kildevaeld/udled-rs#1f4dce33b22918a1a34384fee25ea17d4beec693"
+source = "git+https://github.com/kildevaeld/udled-rs#6d33f15c42598f9a41b5f7bbc230cbcd73627ad7"
 dependencies = [
  "unicode-segmentation",
+]
+
+[[package]]
+name = "udled-helpers"
+version = "0.1.0"
+source = "git+https://github.com/kildevaeld/udled-rs#6d33f15c42598f9a41b5f7bbc230cbcd73627ad7"
+dependencies = [
+ "udled",
 ]
 
 [[package]]
@@ -828,6 +836,7 @@ dependencies = [
  "hashbrown 0.14.5",
  "serde",
  "udled",
+ "udled-helpers",
  "uuid",
  "vaerdi-macros",
 ]
