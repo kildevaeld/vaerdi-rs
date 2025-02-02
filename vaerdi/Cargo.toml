@@ -12,7 +12,7 @@ serde = ["dep:serde", "chrono/serde", "uuid/serde", "bitflags/serde"]
 macros = ["vaerdi-macros"]
 std = ["chrono/clock", "uuid/std", "avagarden/std"]
 gerning = ["dep:gerning"]
-json = ["udled", "udled-helpers", "base64"]
+json = ["udled", "udled-tokenizers", "base64"]
 
 
 [dependencies]
@@ -26,8 +26,8 @@ avagarden = { git = "https://github.com/kildevaeld/avagarden" }
 base64 = { version = "0.22", default-features = false, features = [
     "alloc",
 ], optional = true }
-udled = { git = "https://github.com/kildevaeld/udled-rs", default-features = false, optional = true }
-udled-helpers = { git = "https://github.com/kildevaeld/udled-rs", default-features = false, optional = true }
+udled = { version = "0.3", default-features = false, optional = true }
+udled-tokenizers = { version = "0.1", default-features = false, optional = true }
 
 
 gerning = { git = "https://github.com/kildevaeld/gerning-rs", features = [

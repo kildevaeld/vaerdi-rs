@@ -5,7 +5,7 @@ use udled::{
     token::{Opt, Ws},
     Input, Tokenizer,
 };
-use udled_helpers::{Bool, Int, Str};
+use udled_tokenizers::{Bool, Int, Str};
 
 const WS: Opt<Ws> = Opt(Ws);
 

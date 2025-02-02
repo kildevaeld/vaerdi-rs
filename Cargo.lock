@@ -788,16 +788,18 @@ dependencies = [
 
 [[package]]
 name = "udled"
-version = "0.1.0"
-source = "git+https://github.com/kildevaeld/udled-rs#6d33f15c42598f9a41b5f7bbc230cbcd73627ad7"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8bdceabd532791ab7db0164339352a197e94947a3b60216f394c944da07b550a"
 dependencies = [
  "unicode-segmentation",
 ]
 
 [[package]]
-name = "udled-helpers"
+name = "udled-tokenizers"
 version = "0.1.0"
-source = "git+https://github.com/kildevaeld/udled-rs#6d33f15c42598f9a41b5f7bbc230cbcd73627ad7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da8f61945861d20245844f18f05fd66e473ae107bfa2b487a61e13d1c0f4ff29"
 dependencies = [
  "udled",
 ]
@@ -836,7 +838,7 @@ dependencies = [
  "hashbrown 0.14.5",
  "serde",
  "udled",
- "udled-helpers",
+ "udled-tokenizers",
  "uuid",
  "vaerdi-macros",
 ]
